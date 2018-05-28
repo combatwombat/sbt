@@ -435,9 +435,17 @@ function bookmarklet() {
     global $scriptURL;
     $js = <<<EOD
 (function() {
-    var descMeta = document.querySelectorAll('meta[name="description"]');
     var desc = '';
-    if (descMeta.length) { desc = descMeta[0].getAttribute('content') };
+    var selectedText = '';
+    if (window.getSelection) {
+        selectedText = window.getSelection().toString();
+    } else if (document.selection && document.selection.type != "Control") {
+        selectedText = document.selection.createRange().text;
+    };
+    if (selectedText != '') { desc = selectedText; } else {
+        var descMeta = document.querySelectorAll('meta[name="description"]');
+        if (descMeta.length) { desc = descMeta[0].getAttribute('content') };
+    };
     var apiURL='{$scriptURL}?api&add&url=' + encodeURIComponent(document.URL) + '&title=' + encodeURIComponent(document.title) + '&description=' + encodeURIComponent(desc);
     var webURL='{$scriptURL}?add&goback&url=' + encodeURIComponent(document.URL) + '&title=' + encodeURIComponent(document.title) + '&description=' + encodeURIComponent(desc);
     var el=document.createElement('script');
