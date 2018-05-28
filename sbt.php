@@ -42,7 +42,6 @@ if (!isset($_SERVER['PHP_AUTH_USER'])) {
     }
 }
 
-
 $dbSchema = <<<EOD
 CREATE TABLE `bookmarks` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -177,7 +176,6 @@ function routeIndex() {
 
     <?php
     $html = ob_get_clean();
-
     echo htmlLayout($html);
 }
 
@@ -315,7 +313,6 @@ function htmlLayout($content) {
 
 function bookmarklet() {
     global $scriptURL;
-
     $js = <<<EOD
 (function() {
     var descMeta = document.querySelectorAll('meta[name="description"]');
@@ -327,16 +324,13 @@ function bookmarklet() {
     document.body.appendChild(el);
 })();
 EOD;
-
     return "javascript:" . rawurlencode(str_replace("  ", " ", str_replace("\n", " ", $js)));
 }
 
 function textShorten($str, $textlength = 500) {
     if (strlen($str) > $textlength) {
         $str = substr($str, 0, $textlength); // might cut off the last word
-
         $strArr = explode(" ", $str);
-
         if (count($strArr) > 1) {
             array_pop($strArr); // remove last element, the cut off word
             $str = implode(" ", $strArr);
@@ -345,7 +339,6 @@ function textShorten($str, $textlength = 500) {
         } else {
             $str .= "...";
         }
-
         $str = trim($str);
     }
     return $str;
