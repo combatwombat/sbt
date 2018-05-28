@@ -212,8 +212,9 @@ function routeIndex() {
                 }
             }
             ready(function() {
-                var elements = document.querySelectorAll('a.delete');
 
+                // delete items
+                var elements = document.querySelectorAll('a.delete');
                 Array.prototype.forEach.call(elements, function(el, i){
 
                     el.addEventListener('click', function(ev) {
@@ -257,6 +258,20 @@ function routeIndex() {
                         ev.preventDefault();
                     });
                 });
+
+                // show extra content
+                var menuButton = document.getElementById('menu');
+                var extraContent = document.getElementById('extra');
+                if (menuButton) {
+                    menuButton.addEventListener('click', function(ev) {
+                        if (extraContent.style.display == 'none') {
+                            extraContent.style.display = 'block';
+                        } else {
+                            extraContent.style.display = 'none';
+                        }
+                        ev.preventDefault();
+                    });
+                }
             });
         </script>
     </head>
@@ -268,7 +283,7 @@ function routeIndex() {
                     This should run on http<b>s</b> to work.
                 </p>
             <?php } ?>
-            <div class="extra">
+            <div id="extra" style="display: none;">
                 <p>
                     Bookmarklet: <a class="bookmarklet" href="<?php echo bookmarklet();?>">sbt</a>
                 </p>
