@@ -132,8 +132,11 @@ if (isset($_GET['api'])) {
 
 }
 
+
+
 function routeIndex() {
-    global $db;
+    global $scriptURL, $db;
+
     $res = $db->query('SELECT * FROM bookmarks ORDER BY created_at DESC');
     $items = array();
     if ($res) {
@@ -142,48 +145,6 @@ function routeIndex() {
         }
     }
 
-    ob_start(); ?>
-    <?php if (count($items) > 0) { ?>
-        <ul class="items">
-        <?php foreach ($items as $item) { ?>
-            <li data-id="<?php echo $item['id'];?>">
-                <h2>
-                    <a class="title" href="<?php echo $item['url'];?>">
-                        <?php echo strlen($item['title']) > 0 ? htmlspecialchars($item['title']) : 'no title';?>
-                    </a>
-                </h2>
-                <a class="url" href="<?php echo $item['url'];?>">
-                    <?php echo htmlspecialchars($item['url']);?>
-                </a>
-                <?php if (strlen($item['description']) > 0) { ?>
-                <p class="description">
-                    <?php echo htmlspecialchars(textShorten($item['description'], 1000)); ?>
-                </p>
-                <?php } ?>
-                <div class="meta">
-                    <time>
-                        <?php echo htmlspecialchars(localDateTime($item['created_at'])); ?>
-                    </time>
-                    &middot;
-                    <a class="delete" data-id="<?php echo $item['id'];?>" href="#">delete</a>
-                </div>
-            </li>
-        <?php } ?>
-        </ul>
-    <?php } ?>
-
-    <em id="empty" <?php echo count($items) > 0 ? 'style="display: none;"' : '';?>>empty</em>
-
-    <?php
-    $html = ob_get_clean();
-    echo htmlLayout($html);
-}
-
-
-function htmlLayout($content) {
-    global $scriptURL;
-
-    ob_start();
     ?>
     <!DOCTYPE html>
     <html>
@@ -197,6 +158,12 @@ function htmlLayout($content) {
                 font-size: 0.8em;
                 color: #000;
                 background: #fff;
+            }
+            .site {
+                margin: 0 auto;
+                padding: 0 20px;
+                width: 100%;
+                max-width: 800px;
             }
             .items {
                 list-style-type: none;
@@ -294,21 +261,55 @@ function htmlLayout($content) {
         </script>
     </head>
     <body>
-        <h1>Simple Bookmark Tool</h1>
-        <?php if (empty($_SERVER['HTTPS'])) { ?>
-        <p style="color: red;">
-            This should run on http<b>s</b> to work.
-        </p>
-        <?php } ?>
-        <p>
-            Bookmarklet: <a class="bookmarklet" href="<?php echo bookmarklet();?>">sbt</a>
-        </p>
-        <?php echo $content; ?>
+        <div class="site">
+            <h1>Simple Bookmark Tool <a href="#" id="menu">🍔</a></h1>
+            <?php if (empty($_SERVER['HTTPS'])) { ?>
+                <p style="color: red;">
+                    This should run on http<b>s</b> to work.
+                </p>
+            <?php } ?>
+            <div class="extra">
+                <p>
+                    Bookmarklet: <a class="bookmarklet" href="<?php echo bookmarklet();?>">sbt</a>
+                </p>
+                <p>
+                    Bookmarks: <?php echo count($items);?>
+                </p>
+            </div>
+
+            <?php if (count($items) > 0) { ?>
+                <ul class="items">
+                    <?php foreach ($items as $item) { ?>
+                        <li data-id="<?php echo $item['id'];?>">
+                            <h2>
+                                <a class="title" href="<?php echo $item['url'];?>">
+                                    <?php echo strlen($item['title']) > 0 ? htmlspecialchars($item['title']) : 'no title';?>
+                                </a>
+                            </h2>
+                            <a class="url" href="<?php echo $item['url'];?>">
+                                <?php echo htmlspecialchars($item['url']);?>
+                            </a>
+                            <?php if (strlen($item['description']) > 0) { ?>
+                                <p class="description">
+                                    <?php echo htmlspecialchars(textShorten($item['description'], 1000)); ?>
+                                </p>
+                            <?php } ?>
+                            <div class="meta">
+                                <time>
+                                    <?php echo htmlspecialchars(localDateTime($item['created_at'], 'd. M Y H:i:s')); ?>
+                                </time>
+                                &middot;
+                                <a class="delete" data-id="<?php echo $item['id'];?>" href="#">delete</a>
+                            </div>
+                        </li>
+                    <?php } ?>
+                </ul>
+            <?php } ?>
+
+            <em id="empty" <?php echo count($items) > 0 ? 'style="display: none;"' : '';?>>empty</em>
+        </div>
     </body>
     </html>
-    <?php
-    return ob_get_clean();
-    ?>
 <?php }
 
 function bookmarklet() {
@@ -344,11 +345,11 @@ function textShorten($str, $textlength = 500) {
     return $str;
 }
 
-function localDateTime($utcDateTime) {
+function localDateTime($utcDateTime, $format='Y-m-d H:i:s') {
     global $config;
     $local = new DateTimeZone($config['app']['timezone']);
     $utc = new DateTimeZone("UTC");
     $date = new DateTime($utcDateTime, $utc);
     $date->setTimezone($local);
-    return $date->format('Y-m-d H:i:s');
+    return $date->format($format);
 }
