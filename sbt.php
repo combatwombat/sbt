@@ -277,14 +277,7 @@ function routeIndex() {
                 margin-bottom: 2em;
                 border-bottom: 1px solid #ccc;
             }
-
-            @media (max-width: 400px) {
-                .items h2,
-                .items .description,
-                .items .url {
-                    word-break: break-all;
-                }
-            }
+            
             @media (max-width: 340px) {
                 h1 {
                     font-size: 1.9em;
