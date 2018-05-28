@@ -44,9 +44,9 @@ if (!isset($_SERVER['PHP_AUTH_USER'])) {
 $dbSchema = <<<EOD
 CREATE TABLE `bookmarks` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `url` mediumtext,
-  `title` mediumtext,
-  `description` mediumtext,
+  `url` text,
+  `title` text,
+  `description` text,
   `created_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
