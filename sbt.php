@@ -205,6 +205,7 @@ function routeIndex() {
     <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Simple Bookmark Tool</title>
         <link rel="shortcut icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAACmBJREFUeNrkV1mMW2cV/u7yX9/r3Z59xp6ZZCYzzTZpmqTZGqWQUBVS2gZ1U4uoAJWCKA9UAoLSFB66qJSHCoHoygtIjaAkbUkLVRfopJO0TSbTaDLZOp10Ni/xbl9fX9+VYycVEgRe+4Bly5bv/f//nO/7znfO5VzXxef54vE5v8TC/kcu/bIFyAMMmYkXUTw/C072wbVNgJNglBbRtv1uhEZ2g+MgO3V9KfN4Y7BNgRd5uMyn0a3zrmXNmXrJKh75DWqfTsA0eQz/aBSV6VdQOngQTi0EDCTgOgy4DLx4xbC4yzGZFlyrDk9r19VuNXN3ceyp6xwtt5IXw0E55Idbr6GazoJ5PTAKBdQqpYuejtgYk4RDnBx5yTEKZU5gzQ3/G9H/GQCl6Fg2Za/BE/TeKre2POqLDa1wbB4Ca4eeiUKQAIsO5wUFLNoJR6tB6eyF1Ga1O/XqbpEXdvsi0WdtXf1d4aNX95mVT9I888KuXcrNvbIGuMbZsA0DPM/FQssGjwV6YwfDy5avkMKtkAIe6BfT4FmdIKzDsS2YdROc60Bui4ATKRfXBvP5aVcOomAI0Xjsvtwbj6byH72+x9s9DM4W8e+iFwUlchlvEbxMayW2LdjX83dfLCY4tgM9OQ9Pu4l6Jg8j+Sm8SwZhVasQPB7UciX4OqOwqyWYNfqvgZ5RoQR4OK7Q3Da6bBkscI/rpY/vcVvUTTzHqgTwZyxD1GaPUOQUFUGsa+H1zBsYlduJX8oGRhWWqaI0cQQc4c4ChL1Zo8UWfdvwd/ihJ+Yg+r1gkgurUkZDlGbNogAaSVnwtnQRzyZ0ObOqKpXfEY3gJkrSdR33chXMvdH84ZomhHz4schQX1Ncjl0lRESIoQ7o8xcgL+2Do9dhXrwASp+uUXVoLmVbp2DoXdWhtEdhVGok3ioYrWWRCGy9QtBXEYiG4XLs2kK68ryisG/zotBMnBf8HRB8neCCHRu8PdEviZSBrZYoqwAc+GHMT5MY/ZD8QeK/qT6i2IClluGoBTpIaWYqeuhSRYVr1OBrDYJ5GAXH0CgCqiI4XACRvjiUjv5v6ZXaasfSCd16QwOMtOOCcYFhSQnCIWg4is5IJ2BrKkTJIXwUOJU83JoKpStOmdD1TAKC1w+rpkGg+5kiEiJ1eMM+okEmRg2izaB7AgAL0hoZrLUfilmBNpfZ6pSsSVcQIDp3k/hCBnDCvl2cDICPeykjHWYp3YSZXKZJkVMrge6nSiH5UOQS8U4pQlTkZulyRKkcCZEnKCRGEZxHhivRR/DRatYMgtKHj2jMDShd6R5C0mYQq1ReqouWce7c9g0FA1vkDcCKXlSiMZi5JJ1cp82ty4dRgK5JZUg+4XLNbyIRDZw5QWyaChFIEvFSACRkXiIxUhK2DdGwwc0kcWxmAvkbjYd7r249VC9VjnHPjQm0qRdSi/Z7S+C+rh1pw4bkCDas20o1RNGLhA6pzOUabtYwinozGJdMyDbIDxqGJClNH+C0LHitQDFRUA29EALQAe1CCnNzn2IilERibRY9XARRIbozHOXeFjv9YUiCRRx6O4snKphBEi/0pXDs5DRGRobQw2JocYJQKEvmpRyJa0gEfzgEoUbWVqSgXPESzKCD6wa0ag1FMqnZqoaz6SS4QAGJ5VRBR8roTDLoN+vIW0krlyRUjOx+1Mt/2Wbj/VHryXmw39qYOgj8Yi252hM8VQC5V9DFNX0d8Kp+KlUJkUgYtXrDF0g/YQM2VYWr1lGiRDLZKmol0kuEwzwFEF0pYf3WEDwLROO2BVRLNmq/bNm+7o7uUaVI1DBpWQsbP/ocoC6Wd7WnuPH02s1/7OL3kQn5/lBFbmUEMz0e8noZB7VZ5Cm7tf0cjiyI6M0F4R3LYZiMq9QhIv9iEWtuIeO5owWBOofv/biGaFrB8QrD9MEMYh4bW/YA3TcOrYazehR8hvR1/Okh7P8uy5Ux9eQovuDtld75BoujP0URp2aBQgPaMBKajclHgsjvodKbInN5rISNYxZaF1Qc9Uo4Lbj4asXE8JJumGvawEQS6Ok50gD5xQYB+lrAu4uoinUBC51UOdEbXBZ/k5Rjn2+0pBcmgewi39anAk97F7DcL+O6HSEMjGhAOQPPh8DqWQP5w+TQr+TQnVAR2EKU9wIdMLCC9ugfJlNyKmDnckjOOZhd6yLlZSgqPAZV0tCveSS7eaxZnkUsMX4Du+UABSCZSFEHu2lHK4J3OTvGDySgLtiokrkc/hhIhy1sug9ouZ9OOKSi+xxFuI5A2U4fmi98RE00Tg1N1ZAlkZ044uLEKWBukQdfof5SdrFKdnCmpmNGszD8aACjfe0ndojKX0NainHWyZvBtfSDr6rrEJ39IHk4J5x5+DSJnFqq5MHZs1SCcRs37ZHgW0fqn6W6StEnS967qY/SFzH38jxe3Z/D7DiwjIypZ8iPq1f6mi55fjKPdW0Sxk+TRd/eii0PxfDm6SJOydV371z17PWcfmiYmkZnjOeVDxPZc112SIS+YGL67QXweQYlY8NOCEhrOrb+rB3xe4eBBNX4gA/OmRRG901g/G8GggEav+Ie9Po5hCRG/uBQD5CRKmsoRU2UVoeQGuCx0fI5XdOLTz7v1n++8wcHdGFfXw6OtFk86eYzr1sLNz1zdAGJPgWe69uRHhQwF6ekJR7nMy5OvlTGCHHu+2IY9UPnceCWU5gedzAckzEQ5VFWDUwnDOTI/nt2tiE/ZOPlXhupzV14t83FdEbFemNVqie+42tCsKQHVt9JVXCRiI724qnXdjx9Zua9+/vFJVhryVigIWSaaWjv9yA5WwfTCJmCicpHZdy6mYPwfhWD1CV7VgSwWDKhlQ3UaKhpuaoFg9cEcZa84NDxPPQUj6F5hmOtRQyt8eEri0vP9zz03vBn06CItsHmlBbvkv/RW24d2KXHdnpCyzAjpjFfOwl/RsE953TI/Q6O7qJybOfx9iT5w8Z29JEV30H/r9oSI1hoFONIF1Ubr70whcNZAxuTPOJZEzVm48slP9S3yBHbkn/qoSEHLNzsJVxjRmtMP2/N3IbOD06i/xPxO2qQPeOPRKEGGPx8EH4aViz9IgqiCT/1/nq2jrGV5P9TRdTGMghZFhnMEHxLg9j74HEU77oKD/T0w/7VJLSABpPK2DJovjCMp6Tuth+u3zsKT9sSaveFf03FlmFB40hwSuBZrZD7c/nszINtXZ3f5HpauoqogqtVELRlWJZJ9ingeqLCpTXOKj/OXzAx+cwsNKKinwbL61gW8lEVRZnmAUevhpZvPpBPZJ4oLUxPyWQ6HH95Fub4Kz0XuNT3pZzmsr3JbG6vpJbWyx2DO5iv85pyeuIqaq1x6v5hnvox1+h6Ao+lS13kU5RfwSzctqJjUT61/OPZxXNThVRybOSnB8Za1++uf/CTEZqiLo39//u5oBkZNV7aWGhcrReOh7Z9/3jw2nsJ+tnGWC27ltnOObbS3IzmAVdXLcV11L5gNE/Dq8nC3Yi88xvMP/4ApEisMZ1SWRKKwpWO+n9/OP3cA/inAAMA2l2tuipMCFkAAAAASUVORK5CYII=">
 
@@ -217,7 +218,7 @@ function routeIndex() {
             }
             .site {
                 margin: 0 auto;
-                padding: 0 20px;
+                padding: 0 10px;
                 width: 100%;
                 max-width: 800px;
             }
@@ -239,7 +240,7 @@ function routeIndex() {
             .items .description,
             .items .url {
                 margin: 0 0 5px 0;
-
+                word-break: break-word;
             }
             .items .meta time {
                 color: #bbb;
@@ -247,7 +248,6 @@ function routeIndex() {
             .items .url {
                 display: block;
                 color: #228822;
-                word-break: break-word;
             }
             .items .meta .delete {
                 color: #ca0000;
@@ -276,6 +276,12 @@ function routeIndex() {
                 padding-bottom: 1em;
                 margin-bottom: 2em;
                 border-bottom: 1px solid #ccc;
+            }
+
+            @media (max-width: 340px) {
+                h1 {
+                    font-size: 1.9em;
+                }
             }
         </style>
 
