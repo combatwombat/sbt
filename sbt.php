@@ -78,7 +78,7 @@ if (isset($_GET['api'])) {
             $url = $_GET['url'];
             $title = isset($_GET['title']) && strlen($_GET['title']) > 0 ? substr($_GET['title'], 0, 2000) : '';
             $description = isset($_GET['description']) && strlen($_GET['description']) > 0 ? $_GET['description'] : '';
-            $createdAt = date("Y-m-d H:i:s");
+            $createdAt = gmdate("Y-m-d H:i:s");
 
             $stmt = $db->prepare("INSERT INTO bookmarks SET url = ?, title = ?, description = ?, created_at = ?");
             $stmt->execute([$url, $title, $description, $createdAt]);
