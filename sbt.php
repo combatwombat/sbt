@@ -27,6 +27,7 @@ $config = array(
 );
 
 $scriptURL = "http".(!empty($_SERVER['HTTPS'])?"s":"")."://".$_SERVER['SERVER_NAME'].$_SERVER['SCRIPT_NAME'];
+$messages = array();
 
 // Basic HTTP auth
 if (!isset($_SERVER['PHP_AUTH_USER'])) {
@@ -72,21 +73,7 @@ if (isset($_GET['api'])) {
     // Add url
     if (isset($_GET['add'])) {
 
-        if (isset($_GET['url']) && strlen($_GET['url']) > 0 && filter_var($_GET['url'], FILTER_VALIDATE_URL))
-        {
-            $url = $_GET['url'];
-            $title = isset($_GET['title']) && strlen($_GET['title']) > 0 ? $_GET['title'] : '';
-            $description = isset($_GET['description']) && strlen($_GET['description']) > 0 ? $_GET['description'] : '';
-            $createdAt = gmdate("Y-m-d H:i:s");
-
-            $stmt = $db->prepare("INSERT INTO bookmarks SET url = ?, title = ?, description = ?, created_at = ?");
-            $stmt->execute([$url, $title, $description, $createdAt]);
-            $inserted = $stmt->rowCount();
-
-            $success = $inserted == 1;
-        }
-
-        if ($success) {
+        if (addBookmark()) {
             echo "alert('Added to Simple Bookmark Tool');";
         } else {
             echo "alert('Error adding to Simple Bookmark Tool');";
@@ -111,6 +98,17 @@ if (isset($_GET['api'])) {
  */
 } else {
 
+    // added with fallback method for pages with Content Security Policy?
+    if (isset($_GET['add'])) {
+
+        addBookmark();
+        if (isset($_GET['goback'])) {
+            header("Location: " . $_GET['url']);
+            die();
+        }
+    }
+
+
     // are our tables missing? create them
     $res = $db->query("SHOW TABLES");
     $tables = $res->fetchAll(PDO::FETCH_COLUMN);
@@ -132,10 +130,29 @@ if (isset($_GET['api'])) {
 
 }
 
+function addBookmark() {
+    global $db;
+    $success = false;
+    if (isset($_GET['url']) && strlen($_GET['url']) > 0 && filter_var($_GET['url'], FILTER_VALIDATE_URL))
+    {
+        $url = $_GET['url'];
+        $title = isset($_GET['title']) && strlen($_GET['title']) > 0 ? $_GET['title'] : '';
+        $description = isset($_GET['description']) && strlen($_GET['description']) > 0 ? $_GET['description'] : '';
+        $createdAt = gmdate("Y-m-d H:i:s");
+
+        $stmt = $db->prepare("INSERT INTO bookmarks SET url = ?, title = ?, description = ?, created_at = ?");
+        $stmt->execute([$url, $title, $description, $createdAt]);
+        $inserted = $stmt->rowCount();
+
+        $success = $inserted == 1;
+    }
+    return $success;
+}
+
 
 
 function routeIndex() {
-    global $scriptURL, $db;
+    global $scriptURL, $db, $messages;
 
     $res = $db->query('SELECT * FROM bookmarks ORDER BY created_at DESC');
     $items = array();
@@ -200,6 +217,12 @@ function routeIndex() {
                 background: #ccc;
                 padding: 5px 10px;
                 border-radius: 3px;
+            }
+
+            #extra {
+                padding-bottom: 1em;
+                margin-bottom: 2em;
+                border-bottom: 1px solid #ccc;
             }
         </style>
 
@@ -283,12 +306,29 @@ function routeIndex() {
                     This should run on http<b>s</b> to work.
                 </p>
             <?php } ?>
+
+            <?php if (!empty($messages)) { ?>
+            <ul class="messages">
+                <?php foreach ($messages as $message) { ?>
+                <li class="message <?php echo $message['type'];?>">
+                    <?php echo $message['text']; ?>
+                </li>
+                <?php }?>
+            </ul>
+            <?php } ?>
             <div id="extra" style="display: none;">
                 <p>
                     Bookmarklet: <a class="bookmarklet" href="<?php echo bookmarklet();?>">sbt</a>
                 </p>
                 <p>
                     Bookmarks: <?php echo count($items);?>
+                </p>
+                <p>
+                    Histori.us HTML Import:<br>
+                    <form action="" method="post">
+                        <input type="file" name="historious_html">
+                        <input type="submit" value="Import">
+                    </form>
                 </p>
             </div>
 
@@ -334,14 +374,23 @@ function bookmarklet() {
     var descMeta = document.querySelectorAll('meta[name="description"]');
     var desc = '';
     if (descMeta.length) { desc = descMeta[0].getAttribute('content') };
-    var url='{$scriptURL}?api&add&url=' + encodeURIComponent(document.URL) + '&title=' + encodeURIComponent(document.title) + '&description=' + encodeURIComponent(desc);
+    var apiURL='{$scriptURL}?api&add&url=' + encodeURIComponent(document.URL) + '&title=' + encodeURIComponent(document.title) + '&description=' + encodeURIComponent(desc);
+    var webURL='{$scriptURL}?add&goback&url=' + encodeURIComponent(document.URL) + '&title=' + encodeURIComponent(document.title) + '&description=' + encodeURIComponent(desc);
     var el=document.createElement('script');
-    el.src=url;
-    document.body.appendChild(el);
+    el.src=apiURL;
+    el.onerror=function() {
+        if (confirm("Go to Simple Bookmark Tool to add this page? Can't do it directly.")) {
+            window.location.href = webURL;
+        }
+    };    
+    document.body.appendChild(el); 
 })();
 EOD;
     return "javascript:" . rawurlencode(str_replace("  ", " ", str_replace("\n", " ", $js)));
 }
+
+
+/// Helper
 
 function textShorten($str, $textlength = 500) {
     if (strlen($str) > $textlength) {
