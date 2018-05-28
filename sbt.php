@@ -101,11 +101,8 @@ if (isset($_GET['api'])) {
             $stmt->execute([$_POST['id']]);
             $deleted = $stmt->rowCount();
 
-            if ($deleted == 1) {
-                $success = true;
-            }
+            echo $deleted == 1 ? "1" : "";
         }
-        echo $success ? "1" : "0";
     }
 
     die();
