@@ -117,16 +117,13 @@ if (isset($_GET['api'])) {
             $dom->loadHTML($html, LIBXML_PARSEHUGE);
             $links = $dom->getElementsByTagName('a');
             $linksCount = 0;
-            $successLinksCount = 0;
             foreach ($links as $link) {
                 $url = $link->getAttribute('href');
                 $title = $link->nodeValue;
                 $description = $link->getAttribute('tags');
                 $createdAt = gmdate("Y-m-d H:i:s", $link->getAttribute('add_date'));
 
-                if (addBookmark($url, $title, $description, $createdAt)) {
-                    $successLinksCount++;
-                } else {
+                if (!addBookmark($url, $title, $description, $createdAt)) {
                     $messages[] = array('type' => 'error', 'text' => 'Error importing ' . $url);
                     $success = false;
                 }
@@ -199,6 +196,7 @@ function routeIndex() {
             $items[] = $item;
         }
     }
+    $itemCount = count($items);
 
     ?>
     <!DOCTYPE html>
@@ -382,7 +380,7 @@ function routeIndex() {
                     Bookmarklet: <a class="bookmarklet" href="<?php echo bookmarklet();?>">bookmark!</a>
                 </p>
                 <p>
-                    Bookmarks: <?php echo count($items);?>
+                    Bookmarks: <?php echo $itemCount;?>
                 </p>
                 <p>
                     Netscape Bookmark HTML Import:
@@ -394,7 +392,7 @@ function routeIndex() {
                 </p>
             </div>
 
-            <?php if (count($items) > 0) { ?>
+            <?php if ($itemCount > 0) { ?>
                 <ul class="items">
                     <?php foreach ($items as $item) { ?>
                         <li data-id="<?php echo $item['id'];?>">
@@ -423,7 +421,7 @@ function routeIndex() {
                 </ul>
             <?php } ?>
 
-            <em id="empty" <?php echo count($items) > 0 ? 'style="display: none;"' : '';?>>empty</em>
+            <em id="empty" <?php echo $itemCount > 0 ? 'style="display: none;"' : '';?>>empty</em>
         </div>
     </body>
     </html>
@@ -450,7 +448,6 @@ function bookmarklet() {
 EOD;
     return "javascript:" . rawurlencode(str_replace("  ", " ", str_replace("\n", " ", $js)));
 }
-
 
 /// Helpers
 
