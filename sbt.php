@@ -356,10 +356,9 @@ function textShorten($str, $textlength = 500) {
 
 function localDateTime($utcDateTime) {
     global $config;
-    $dateTimeZone = new DateTimeZone($config['app']['timezone']);
-
+    $local = new DateTimeZone($config['app']['timezone']);
     $utc = new DateTimeZone("UTC");
     $date = new DateTime( $utcDateTime, $utc);
-    $date->setTimezone( $dateTimeZone );
+    $date->setTimezone( $local );
     return $date->format('Y-m-d H:i:s');
 }
