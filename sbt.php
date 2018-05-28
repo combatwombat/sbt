@@ -358,7 +358,7 @@ function localDateTime($utcDateTime) {
     global $config;
     $local = new DateTimeZone($config['app']['timezone']);
     $utc = new DateTimeZone("UTC");
-    $date = new DateTime( $utcDateTime, $utc);
-    $date->setTimezone( $local );
+    $date = new DateTime($utcDateTime, $utc);
+    $date->setTimezone($local);
     return $date->format('Y-m-d H:i:s');
 }
