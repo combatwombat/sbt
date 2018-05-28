@@ -137,7 +137,7 @@ if (isset($_GET['api'])) {
 }
 
 function routeIndex() {
-    global $db, $utc;
+    global $db;
     $res = $db->query('SELECT * FROM bookmarks ORDER BY created_at DESC');
     $items = array();
     if ($res) {
