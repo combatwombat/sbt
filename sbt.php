@@ -153,23 +153,24 @@ function routeIndex() {
         <ul class="items">
         <?php foreach ($items as $item) { ?>
             <li data-id="<?php echo $item['id'];?>">
-                <a class="title" href="<?php echo $item['url'];?>">
-                    <?php echo strlen($item['title']) > 0 ? htmlspecialchars($item['title']) : 'no title';?>
+                <h2>
+                    <a class="title" href="<?php echo $item['url'];?>">
+                        <?php echo strlen($item['title']) > 0 ? htmlspecialchars($item['title']) : 'no title';?>
+                    </a>
+                </h2>
+                <a class="url" href="<?php echo $item['url'];?>">
+                    <?php echo htmlspecialchars($item['url']);?>
                 </a>
                 <?php if (strlen($item['description']) > 0) { ?>
-                <p class="desc">
-                    <?php echo htmlspecialchars($item['description']); ?>
+                <p class="description">
+                    <?php echo htmlspecialchars(text_shorten($item['description'], 1000)); ?>
                 </p>
                 <?php } ?>
                 <div class="meta">
-                    <a class="url" href="<?php echo $item['url'];?>">
-                        <?php echo htmlspecialchars($item['url']);?>
-                    </a>
-                    -
                     <time>
                         <?php echo htmlspecialchars($item['created_at']); ?>
                     </time>
-                    -
+                    &middot;
                     <a class="delete" data-id="<?php echo $item['id'];?>" href="#">delete</a>
                 </div>
             </li>
@@ -198,7 +199,48 @@ function htmlLayout($content) {
         <title>Simple Bookmark Tool</title>
 
         <style media="screen">
+            body {
+                font-family: sans-serif;
+                font-size: 0.8em;
+                color: #000;
+                background: #fff;
+            }
+            .items {
+                list-style-type: none;
+                padding-left: 0;
+            }
+            .items li {
+                margin-bottom: 2em;
+            }
+            a {
+                text-decoration: none;
+                color: #004df9;
+            }
+            .items h2,
+            .items .description,
+            .items .url {
+                margin: 0 0 5px 0;
 
+            }
+            .items .meta time {
+                color: #bbb;
+            }
+            .items .url {
+                display: block;
+                color: #228822;
+                word-break: break-word;
+            }
+            .items .meta .delete {
+                color: #ca0000;
+            }
+
+            .bookmarklet {
+                display: inline-block;
+                color: #000;
+                background: #ccc;
+                padding: 5px 10px;
+                border-radius: 3px;
+            }
         </style>
 
         <script type="text/javascript">
@@ -250,7 +292,6 @@ function htmlLayout($content) {
                                     alert("Connection error.");
                                 };
                                 request.send("id="+id);
-
                             }
                         }
                         ev.preventDefault();
@@ -293,4 +334,24 @@ function bookmarklet() {
 EOD;
 
     return "javascript:" . rawurlencode(str_replace("  ", " ", str_replace("\n", " ", $js)));
+}
+
+function text_shorten($str, $textlength = 500) {
+    if (strlen($str) > $textlength) {
+        $str = substr($str, 0, $textlength); // might cut off the last word
+
+        $strArr = explode(" ", $str);
+
+        if (count($strArr) > 1) {
+            array_pop($strArr); // remove last element, the cut off word
+            $str = implode(" ", $strArr);
+            $str .= " [...]";
+
+        } else {
+            $str .= "...";
+        }
+
+        $str = trim($str);
+    }
+    return $str;
 }
