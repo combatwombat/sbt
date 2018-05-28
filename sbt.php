@@ -1,6 +1,6 @@
 <?php
 /**
- * Simple Bookmark Tool
+ * Simple Bookmark Tool 1.0
  * Robert Gerlach 2018
  *
  * Install:
@@ -73,7 +73,7 @@ if (isset($_GET['api'])) {
     // Add url
     if (isset($_GET['add'])) {
 
-        if (addBookmark()) {
+        if (addBookmarkFromGET()) {
             echo "alert('Added to Simple Bookmark Tool');";
         } else {
             echo "alert('Error adding to Simple Bookmark Tool');";
@@ -101,12 +101,53 @@ if (isset($_GET['api'])) {
     // added with fallback method for pages with Content Security Policy?
     if (isset($_GET['add'])) {
 
-        addBookmark();
+        addBookmarkFromGET();
         if (isset($_GET['goback'])) {
             header("Location: " . $_GET['url']);
             die();
         }
     }
+
+    // import something?
+    if (isset($_POST['import']) && $_POST['import'] == "1") {
+        $success = true;
+
+        if (isset($_FILES['netscape_html']) && !empty($_FILES['netscape_html'])) {
+            $html = file_get_contents($_FILES['netscape_html']['tmp_name']);
+
+            $dom = new DOMDocument;
+            //libxml_use_internal_errors(true);
+            $dom->loadHTML($html, LIBXML_PARSEHUGE);
+            $links = $dom->getElementsByTagName('a');
+            $linksCount = 0;
+            $successLinksCount = 0;
+            foreach ($links as $link) {
+                $url = $link->getAttribute('href');
+                $title = $link->nodeValue;
+                $description = $link->getAttribute('tags');
+                $createdAt = gmdate("Y-m-d H:i:s", $link->getAttribute('add_date'));
+
+
+                if (addBookmark($url, $title, $description, $createdAt)) {
+                    $successLinksCount++;
+                } else {
+                    $messages[] = array('type' => 'error', 'text' => 'Error importing ' . $url);
+                    $success = false;
+                }
+                $linksCount++;
+            }
+        }
+
+        if ($success) {
+            $messages[] = array('type' => 'success', 'text' => 'Imported ' . $linksCount . ' bookmarks.');
+        } else {
+            $messages[] = array('type' => 'error', 'text' => 'Error importing all bookmarks.');
+        }
+
+    }
+
+
+
 
 
     // are our tables missing? create them
@@ -130,23 +171,31 @@ if (isset($_GET['api'])) {
 
 }
 
-function addBookmark() {
-    global $db;
-    $success = false;
+function addBookmarkFromGET() {
     if (isset($_GET['url']) && strlen($_GET['url']) > 0 && filter_var($_GET['url'], FILTER_VALIDATE_URL))
     {
         $url = $_GET['url'];
         $title = isset($_GET['title']) && strlen($_GET['title']) > 0 ? $_GET['title'] : '';
         $description = isset($_GET['description']) && strlen($_GET['description']) > 0 ? $_GET['description'] : '';
-        $createdAt = gmdate("Y-m-d H:i:s");
+        return addBookmark($url, $title, $description);
+    }
+    return false;
+}
+
+function addBookmark($url, $title, $description, $createdAt = null) {
+    global $db;
+    if (strlen($url) > 0 && filter_var($url, FILTER_VALIDATE_URL)) {
+        if ($createdAt == null) {
+            $createdAt = gmdate("Y-m-d H:i:s");
+        }
 
         $stmt = $db->prepare("INSERT INTO bookmarks SET url = ?, title = ?, description = ?, created_at = ?");
         $stmt->execute([$url, $title, $description, $createdAt]);
         $inserted = $stmt->rowCount();
 
-        $success = $inserted == 1;
+        return $inserted == 1;
     }
-    return $success;
+    return false;
 }
 
 
@@ -181,6 +230,9 @@ function routeIndex() {
                 padding: 0 20px;
                 width: 100%;
                 max-width: 800px;
+            }
+            h1 a {
+                color: #000;
             }
             .items {
                 list-style-type: none;
@@ -217,6 +269,20 @@ function routeIndex() {
                 background: #ccc;
                 padding: 5px 10px;
                 border-radius: 3px;
+            }
+
+            .messages {
+                padding-left: 0;
+                list-style-type: none;
+            }
+            .messages .message {
+                padding-bottom: 5px;
+            }
+            .messages .message.success {
+                color: #00ca00;
+            }
+            .messages .message.error {
+                color: #ca0000;
             }
 
             #extra {
@@ -300,10 +366,10 @@ function routeIndex() {
     </head>
     <body>
         <div class="site">
-            <h1>Simple Bookmark Tool <a href="#" id="menu">🍔</a></h1>
+            <h1><a href="">Simple Bookmark Tool</a> <a href="#" id="menu">🍔</a></h1>
             <?php if (empty($_SERVER['HTTPS'])) { ?>
-                <p style="color: red;">
-                    This should run on http<b>s</b> to work.
+                <p style="color: #ca0000;">
+                    This should run on http<b style="color: #f00;">s</b> to work.
                 </p>
             <?php } ?>
 
@@ -316,18 +382,20 @@ function routeIndex() {
                 <?php }?>
             </ul>
             <?php } ?>
+
             <div id="extra" style="display: none;">
                 <p>
-                    Bookmarklet: <a class="bookmarklet" href="<?php echo bookmarklet();?>">sbt</a>
+                    Bookmarklet: <a class="bookmarklet" href="<?php echo bookmarklet();?>">bookmark!</a>
                 </p>
                 <p>
                     Bookmarks: <?php echo count($items);?>
                 </p>
                 <p>
-                    Histori.us HTML Import:<br>
-                    <form action="" method="post">
-                        <input type="file" name="historious_html">
+                    Netscape Bookmark HTML Import:
+                    <form action="" method="post" enctype="multipart/form-data">
+                        <input type="file" name="netscape_html">
                         <input type="submit" value="Import">
+                        <input type="hidden" name="import" value="1">
                     </form>
                 </p>
             </div>
@@ -379,7 +447,7 @@ function bookmarklet() {
     var el=document.createElement('script');
     el.src=apiURL;
     el.onerror=function() {
-        if (confirm("Go to Simple Bookmark Tool to add this page? Can't do it directly.")) {
+        if (confirm("Add to Simple Bookmark Tool?")) {
             window.location.href = webURL;
         }
     };    
