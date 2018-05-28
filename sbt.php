@@ -221,6 +221,7 @@ function routeIndex() {
                 padding: 0 10px;
                 width: 100%;
                 max-width: 800px;
+                box-sizing: border-box;
             }
             h1 a {
                 color: #000;
@@ -277,7 +278,7 @@ function routeIndex() {
                 margin-bottom: 2em;
                 border-bottom: 1px solid #ccc;
             }
-            
+
             @media (max-width: 340px) {
                 h1 {
                     font-size: 1.9em;
