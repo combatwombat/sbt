@@ -6,7 +6,7 @@
  * Install:
  * - Enable SSL
  * - Create database
- * - Edit you data in the config array below
+ * - Edit your data in the config array below
  * - Upload sbt.php
  */
 
