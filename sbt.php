@@ -76,7 +76,7 @@ if (isset($_GET['api'])) {
         if (isset($_GET['url']) && strlen($_GET['url']) > 0 && filter_var($_GET['url'], FILTER_VALIDATE_URL))
         {
             $url = $_GET['url'];
-            $title = isset($_GET['title']) && strlen($_GET['title']) > 0 ? substr($_GET['title'], 0, 2000) : '';
+            $title = isset($_GET['title']) && strlen($_GET['title']) > 0 ? $_GET['title'] : '';
             $description = isset($_GET['description']) && strlen($_GET['description']) > 0 ? $_GET['description'] : '';
             $createdAt = gmdate("Y-m-d H:i:s");
 
