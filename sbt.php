@@ -6,25 +6,29 @@
  * Install:
  * - Enable SSL
  * - Create database
- * - Edit your data in the config array below
+ * - Edit your data in the config array below or an external config.php
  * - Upload sbt.php
  */
 
-$config = array(
-    'auth' => array(
-        'user'          => 'sbt',
-        'password'      => 'sbt'
-    ),
-    'db' => array(
-        'name'          => 'sbt',
-        'user'          => 'root',
-        'password'      => 'root',
-        'host'          => '127.0.0.1',
-    ),
-    'app' => array(
-        'timezone' => 'Europe/Berlin'
-    )
-);
+if (file_exists('config.php')) {
+    include('config.php');
+} else {
+    $config = array(
+        'auth' => array(
+            'user'          => 'sbt',
+            'password'      => 'sbt'
+        ),
+        'db' => array(
+            'name'          => 'sbt',
+            'user'          => 'root',
+            'password'      => 'root',
+            'host'          => '127.0.0.1',
+        ),
+        'app' => array(
+            'timezone' => 'Europe/Berlin'
+        )
+    );
+}
 
 $scriptURL = "http".(!empty($_SERVER['HTTPS'])?"s":"")."://".$_SERVER['SERVER_NAME'].$_SERVER['SCRIPT_NAME'];
 $messages = array();
