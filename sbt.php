@@ -26,6 +26,8 @@ $config = array(
     )
 );
 
+$scriptURL = "http".(!empty($_SERVER['HTTPS'])?"s":"")."://".$_SERVER['SERVER_NAME'].$_SERVER['SCRIPT_NAME'];
+
 // Basic HTTP auth
 if (!isset($_SERVER['PHP_AUTH_USER'])) {
     header('WWW-Authenticate: Basic realm="Simple Bookmark Tool"');
@@ -59,10 +61,6 @@ $opt = [
     PDO::ATTR_EMULATE_PREPARES   => false,
 ];
 $db = new PDO($dsn, $config['db']['user'], $config['db']['password'], $opt);
-
-date_default_timezone_set($config['app']['timezone']);
-
-$scriptURL = "http".(!empty($_SERVER['HTTPS'])?"s":"")."://".$_SERVER['SERVER_NAME'].$_SERVER['SCRIPT_NAME'];
 
 
 /**
@@ -139,7 +137,7 @@ if (isset($_GET['api'])) {
 }
 
 function routeIndex() {
-    global $db;
+    global $db, $utc;
     $res = $db->query('SELECT * FROM bookmarks ORDER BY created_at DESC');
     $items = array();
     if ($res) {
@@ -168,7 +166,7 @@ function routeIndex() {
                 <?php } ?>
                 <div class="meta">
                     <time>
-                        <?php echo htmlspecialchars($item['created_at']); ?>
+                        <?php echo htmlspecialchars(localDateTime($item['created_at'])); ?>
                     </time>
                     &middot;
                     <a class="delete" data-id="<?php echo $item['id'];?>" href="#">delete</a>
@@ -354,4 +352,14 @@ function text_shorten($str, $textlength = 500) {
         $str = trim($str);
     }
     return $str;
+}
+
+function localDateTime($utcDateTime) {
+    global $config;
+    $dateTimeZone = new DateTimeZone($config['app']['timezone']);
+
+    $utc = new DateTimeZone("UTC");
+    $date = new DateTime( $utcDateTime, $utc);
+    $date->setTimezone( $dateTimeZone );
+    return $date->format('Y-m-d H:i:s');
 }
