@@ -161,7 +161,7 @@ function routeIndex() {
                 </a>
                 <?php if (strlen($item['description']) > 0) { ?>
                 <p class="description">
-                    <?php echo htmlspecialchars(text_shorten($item['description'], 1000)); ?>
+                    <?php echo htmlspecialchars(textShorten($item['description'], 1000)); ?>
                 </p>
                 <?php } ?>
                 <div class="meta">
@@ -334,7 +334,7 @@ EOD;
     return "javascript:" . rawurlencode(str_replace("  ", " ", str_replace("\n", " ", $js)));
 }
 
-function text_shorten($str, $textlength = 500) {
+function textShorten($str, $textlength = 500) {
     if (strlen($str) > $textlength) {
         $str = substr($str, 0, $textlength); // might cut off the last word
 
