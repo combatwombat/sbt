@@ -70,9 +70,8 @@ if (isset($_GET['api'])) {
 
     $success = false;
 
-    // Add url
+    // Add URL
     if (isset($_GET['add'])) {
-
         if (addBookmarkFromGET()) {
             echo "alert('Added to Simple Bookmark Tool');";
         } else {
@@ -100,7 +99,6 @@ if (isset($_GET['api'])) {
 
     // added with fallback method for pages with Content Security Policy?
     if (isset($_GET['add'])) {
-
         addBookmarkFromGET();
         if (isset($_GET['goback'])) {
             header("Location: " . $_GET['url']);
@@ -116,7 +114,6 @@ if (isset($_GET['api'])) {
             $html = file_get_contents($_FILES['netscape_html']['tmp_name']);
 
             $dom = new DOMDocument;
-            //libxml_use_internal_errors(true);
             $dom->loadHTML($html, LIBXML_PARSEHUGE);
             $links = $dom->getElementsByTagName('a');
             $linksCount = 0;
@@ -126,7 +123,6 @@ if (isset($_GET['api'])) {
                 $title = $link->nodeValue;
                 $description = $link->getAttribute('tags');
                 $createdAt = gmdate("Y-m-d H:i:s", $link->getAttribute('add_date'));
-
 
                 if (addBookmark($url, $title, $description, $createdAt)) {
                     $successLinksCount++;
@@ -146,10 +142,6 @@ if (isset($_GET['api'])) {
 
     }
 
-
-
-
-
     // are our tables missing? create them
     $res = $db->query("SHOW TABLES");
     $tables = $res->fetchAll(PDO::FETCH_COLUMN);
@@ -168,7 +160,6 @@ if (isset($_GET['api'])) {
     } else {
         routeIndex();
     }
-
 }
 
 function addBookmarkFromGET() {
@@ -197,8 +188,6 @@ function addBookmark($url, $title, $description, $createdAt = null) {
     }
     return false;
 }
-
-
 
 function routeIndex() {
     global $scriptURL, $db, $messages;
@@ -263,7 +252,6 @@ function routeIndex() {
             .items .meta .delete {
                 color: #ca0000;
             }
-
             .bookmarklet {
                 display: inline-block;
                 color: #000;
@@ -271,7 +259,6 @@ function routeIndex() {
                 padding: 5px 10px;
                 border-radius: 3px;
             }
-
             .messages {
                 padding-left: 0;
                 list-style-type: none;
@@ -285,7 +272,6 @@ function routeIndex() {
             .messages .message.error {
                 color: #ca0000;
             }
-
             #extra {
                 padding-bottom: 1em;
                 margin-bottom: 2em;
@@ -459,7 +445,7 @@ EOD;
 }
 
 
-/// Helper
+/// Helpers
 
 function textShorten($str, $textlength = 500) {
     if (strlen($str) > $textlength) {
