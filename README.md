@@ -14,6 +14,8 @@ Add bookmarks with a bookmarklet and show them in a list. Also:
 - Upload sbt.php
 - Click on hamburger menu and add bookmarklet
 
+![Simple Bookmark Tool Screenshot](https://robsite.net/sbt/sbt.png)
+
 ## FAQ
 
 ### Why no pagination, search, tags, thumbnails, website mirror, ...?
