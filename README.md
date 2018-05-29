@@ -8,7 +8,7 @@ Add bookmarks with a bookmarklet and show them in a list. Also:
 - One single PHP file, no dependencies, Google Page Speed Score of 99 \o/
 
 ## Install
-- Have PHP, an SQL DBMS and SSL
+- Have PHP, MySQL and SSL
 - Create database
 - Edit your data in the config array or an external config.php
 - Upload sbt.php

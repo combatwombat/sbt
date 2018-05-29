@@ -5,7 +5,7 @@
  * https://github.com/combatwombat/sbt
  *
  * Install:
- * - Have PHP, an SQL DBMS and SSL
+ * - Have PHP, MySQL and SSL
  * - Create database
  * - Edit your data in the config array or an external config.php
  * - Upload sbt.php
