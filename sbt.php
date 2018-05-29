@@ -2,12 +2,14 @@
 /**
  * Simple Bookmark Tool 1.0
  * Robert Gerlach 2018
+ * https://github.com/combatwombat/sbt
  *
  * Install:
- * - Enable SSL
+ * - Have PHP, an SQL DBMS and SSL
  * - Create database
- * - Edit your data in the config array below or an external config.php
+ * - Edit your data in the config array or an external config.php
  * - Upload sbt.php
+ * - Click on hamburger menu and add bookmarklet
  */
 
 if (file_exists('config.php')) {
