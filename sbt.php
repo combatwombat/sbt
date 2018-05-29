@@ -364,7 +364,7 @@ function routeIndex() {
     </head>
     <body>
         <div class="site">
-            <h1><a href="">Simple Bookmark Tool</a> <a href="#" id="menu">🍔</a></h1>
+            <h1><a href="<?php echo $scriptURL;?>">Simple Bookmark Tool</a> <a href="#" id="menu">🍔</a></h1>
             <?php if (empty($_SERVER['HTTPS'])) { ?>
                 <p style="color: #ca0000;">
                     This should run on http<b style="color: #f00;">s</b> to work.
