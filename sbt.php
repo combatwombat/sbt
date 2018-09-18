@@ -211,7 +211,7 @@ function addBookmark($url, $title, $description, $createdAt = null) {
         $stmt->execute([$url, $title, $description, $createdAt]);
         $inserted = $stmt->rowCount();
 
-        return ($inserted == 1) ? 'success' : 'erorr';
+        return ($inserted == 1) ? 'success' : 'error';
     }
     return 'error';
 }
