@@ -78,9 +78,12 @@ if (isset($_GET['api'])) {
 
     // Add URL
     if (isset($_GET['add'])) {
-        if (addBookmarkFromGET()) {
+        $res = addBookmarkFromGET();
+        if ($res == 'success') {
             echo "alert('Added to Simple Bookmark Tool');";
-        } else {
+        } else if ($res == 'duplicate') {
+            echo "alert('Site is already bookmarked in Simple Bookmark Tool.');";
+        } else if ($res == 'error') {
             echo "alert('Error adding to Simple Bookmark Tool');";
         }
 
@@ -129,8 +132,12 @@ if (isset($_GET['api'])) {
                 $description = $link->getAttribute('tags');
                 $createdAt = gmdate("Y-m-d H:i:s", $link->getAttribute('add_date'));
 
-                if (!addBookmark($url, $title, $description, $createdAt)) {
+                $res = addBookmark($url, $title, $description, $createdAt);
+                if ($res == 'error') {
                     $messages[] = array('type' => 'error', 'text' => 'Error importing ' . $url);
+                    $success = false;
+                } else if ($res == 'duplicate') {
+                    $messages[] = array('type' => 'error', 'text' => "Didn't import duplicate " . $url);
                     $success = false;
                 }
                 $linksCount++;
@@ -175,7 +182,14 @@ function addBookmarkFromGET() {
     }
     return false;
 }
-
+/**
+ * add a bookmark
+ * @param $url the URL
+ * @param $title the title
+ * @param description the description
+ * @param $createdAt created-at datetime
+ * @return string "success"|"duplicate"|"error"
+ */
 function addBookmark($url, $title, $description, $createdAt = null) {
     global $db;
     if (strlen($url) > 0 && filter_var($url, FILTER_VALIDATE_URL)) {
@@ -183,13 +197,23 @@ function addBookmark($url, $title, $description, $createdAt = null) {
             $createdAt = gmdate("Y-m-d H:i:s");
         }
 
+        // bookmark with url already exists?
+        $stmt = $db->prepare('SELECT COUNT(*) as c FROM bookmarks WHERE url = ?');
+        $res = $stmt->execute([$url]);
+        if ($res) {
+            $row = $stmt->fetch();
+            if (isset($row['c']) && $row['c'] > 0) {
+                return 'duplicate';
+            }
+        }
+
         $stmt = $db->prepare("INSERT INTO bookmarks SET url = ?, title = ?, description = ?, created_at = ?");
         $stmt->execute([$url, $title, $description, $createdAt]);
         $inserted = $stmt->rowCount();
 
-        return $inserted == 1;
+        return ($inserted == 1) ? 'success' : 'erorr';
     }
-    return false;
+    return 'error';
 }
 
 function routeIndex() {
