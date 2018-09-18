@@ -1,6 +1,6 @@
 <?php
 /**
- * Simple Bookmark Tool 1.0
+ * Simple Bookmark Tool 1.1
  * Robert Gerlach 2018
  * https://github.com/combatwombat/sbt
  *
@@ -207,6 +207,15 @@ function addBookmark($url, $title, $description, $createdAt = null) {
             }
         }
 
+        // no title or description given? get from site
+        if (empty($title) || empty($description)) {
+            $meta = getSiteMeta($url);
+            if ($meta) {
+                $title = empty($title) ? $meta['title'] : $title;
+                $description = empty($description) ? $meta['description'] : $description;
+            }
+        }
+
         $stmt = $db->prepare("INSERT INTO bookmarks SET url = ?, title = ?, description = ?, created_at = ?");
         $stmt->execute([$url, $title, $description, $createdAt]);
         $inserted = $stmt->rowCount();
@@ -214,6 +223,34 @@ function addBookmark($url, $title, $description, $createdAt = null) {
         return ($inserted == 1) ? 'success' : 'error';
     }
     return 'error';
+}
+
+/**
+ * Load URL, extract things from HTML
+ * Needs PHP OpenSSL module
+ * @return $meta ['title' => '', 'description' => '']
+ */
+function getSiteMeta($url) {
+    $meta = array();
+    $dom = new DOMDocument();
+    libxml_use_internal_errors(true);
+    if($dom->loadHTMLFile($url)) {
+
+        // get title
+        $list = $dom->getElementsByTagName("title");
+        if ($list->length > 0) {
+            $meta['title'] = $list->item(0)->textContent;
+        }
+
+        $metaTags = $dom->getElementsByTagName('meta');
+        foreach ($metaTags as $metaTag) {
+            if (strtolower($metaTag->getAttribute('name')) == 'description') {
+                $meta['description'] = $metaTag->getAttribute('content');
+            }
+        }
+    }
+
+    return $meta;
 }
 
 function routeIndex() {
