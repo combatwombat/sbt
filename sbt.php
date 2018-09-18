@@ -283,6 +283,10 @@ function routeIndex() {
                 border-bottom: 1px solid #ccc;
             }
 
+            #extra input {
+                width: 200px;
+            }
+
             @media (max-width: 340px) {
                 h1 {
                     font-size: 1.9em;
@@ -384,6 +388,9 @@ function routeIndex() {
             <div id="extra" style="display: none;">
                 <p>
                     Bookmarklet: <a class="bookmarklet" href="<?php echo bookmarklet();?>">bookmark!</a>
+                </p>
+                <p> 
+                    Bookmarklet URL: <input type="text" value="<?php echo bookmarklet();?>">
                 </p>
                 <p>
                     Bookmarks: <?php echo $itemCount;?>
