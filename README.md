@@ -20,4 +20,4 @@ Add bookmarks with a bookmarklet and show them in a list. Also:
 
 ### Why no pagination, search, tags, thumbnails, website mirror, ...?
 
-As I used [historio.us](https://historio.us) and [pinboard](https://pinboard.in/) it turned out, that I don't use most of these features, even with ~2000 bookmarks. If you need them, try out those services.
+As I used [historio.us](https://historio.us) and [pinboard.in](https://pinboard.in/) it turned out, that I don't use most of these features, even with ~2000 bookmarks. If you need them, try out those services.
