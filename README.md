@@ -5,7 +5,7 @@ Add bookmarks with a bookmarklet and show them in a list. Also:
 - Works on github and other pages with Content Security Policy
 - Import Netscape Bookmark HTML files
 - Select text before bookmarking to use as description
-- One single PHP file, no dependencies, Google Page Speed Score of 99 \o/
+- One single PHP file, no dependencies, Google Page Speed Score of 100 (if you have < ~400 bookmarks :>)
 
 ## Install
 - Have PHP (with openssl extension) and MySQL
