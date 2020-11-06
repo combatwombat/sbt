@@ -173,8 +173,7 @@ if (isset($_GET['api'])) {
 }
 
 function addBookmarkFromGET() {
-    if (isset($_GET['url']) && strlen($_GET['url']) > 0 && filter_var($_GET['url'], FILTER_VALIDATE_URL))
-    {
+    if (isset($_GET['url']) && strlen($_GET['url']) > 0 && filter_var($_GET['url'], FILTER_VALIDATE_URL)) {
         $url = $_GET['url'];
         $title = isset($_GET['title']) && strlen($_GET['title']) > 0 ? $_GET['title'] : '';
         $description = isset($_GET['description']) && strlen($_GET['description']) > 0 ? $_GET['description'] : '';
@@ -186,14 +185,15 @@ function addBookmarkFromGET() {
  * add a bookmark
  * @param $url the URL
  * @param $title the title
- * @param description the description
- * @param $createdAt created-at datetime
+ * @param $description the description
+ * @param $createdAt datetime
  * @return string "success"|"duplicate"|"error"
  */
 function addBookmark($url, $title, $description, $createdAt = null) {
+    
     global $db;
     if (strlen($url) > 0 && filter_var($url, FILTER_VALIDATE_URL)) {
-        if ($createdAt == null) {
+        if ($createdAt === null) {
             $createdAt = gmdate("Y-m-d H:i:s");
         }
 
